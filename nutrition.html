@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Calculator</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1d2021; /* Dark background */
+            --text: #d5c4a1; /* Beige text for readability */
+            --navbar-text: #ebdbb2; /* Light text color for navbar */
+            --border: #3c3836; /* Border color */
+            --link-color: #076678; /* Light blue color for links */
+            --footer-text: #d5c4a1; /* Light text color for footer */
+            --header-text: #ebdbb2; /* Light text color for headers */
+            --content-bg: #282828; /* Darker background for content */
+        }
+
+        body {
+            font-family: 'MuseoModerno', sans-serif;
+            padding-top: 56px;
+            background-color: var(--bg-color);
+            color: var(--text);
+            overflow-x: hidden; /* Prevent horizontal scroll for animations */
+        }
+
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+            background-color: var(--content-bg);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        footer {
+            padding: 20px 0;
+            background-color: var(--bg-color);
+            color: var(--footer-text);
+            text-align: center;
+            border-top: 1px solid var(--border);
+            opacity: 0; /* Initially hidden for fade-in animation */
+            animation: fadeIn 2s forwards; /* Fade-in effect */
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            color: var(--header-text);
+            animation: slideIn 1s ease-out; /* Slide-in effect */
+        }
+
+        .section {
+            margin-bottom: 30px;
+            opacity: 0; /* Initially hidden for fade-in animation */
+            animation: fadeInUp 1s forwards; /* Fade-in-up effect */
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: var(--navbar-text);
+            transition: color 0.3s ease; /* Smooth color transition */
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: var(--footer-text); /* Light beige on hover */
+        }
+
+        .navbar-dark .navbar-brand {
+            color: var(--navbar-text);
+        }
+
+        .navbar-dark .bg-dark {
+            background-color: var(--bg-color) !important;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .recommendations {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">Health Tracker</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="nutrition.html">Nutrition Calculator</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="calorie_calculator.html">Calorie Calculator</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tips.html">Healthy Living Tips</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About Us <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="chatbot.html">Chatbot</a>
+                </li>
+            </ul>
+            <div class="ml-auto time" id="currentTime"></div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Nutrition Calculator</h1>
+
+        <div class="form-group">
+            <label for="calories">Daily Calories Needed:</label>
+            <input type="number" class="form-control" id="calories" placeholder="Enter your daily calories">
+        </div>
+
+        <button class="btn btn-primary" onclick="calculateNutrition()">Calculate</button>
+
+        <div class="recommendations mt-4">
+            <h2>Recommended Nutrients</h2>
+            <div id="nutritionResults">
+                <!-- Results will be displayed here -->
+            </div>
+        </div>
+
+        <div class="recommendations mt-4">
+            <h2>Recommended Foods</h2>
+            <ul id="foodRecommendations">
+                <!-- Food recommendations will be displayed here -->
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Health Tracker. All rights reserved.</p>
+    </footer>
+
+    <!-- JS Libraries -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        (function(d, t) {
+            var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            v.onload = function() {
+              window.voiceflow.chat.load({
+                verify: { projectID: '66c59628f9ca8d559e85a8c6' },
+                url: 'https://general-runtime.voiceflow.com',
+                versionID: 'production'
+              });
+            }
+            v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+        })(document, 'script');
+      </script>
+    <!-- Custom JS -->
+    <script>
+        // Function to update the current time in the header
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', options);
+        }
+
+        // Update the time every second
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function calculateNutrition() {
+            const calories = parseFloat(document.getElementById('calories').value);
+            if (isNaN(calories) || calories <= 0) {
+                alert("Please enter a valid number of calories.");
+                return;
+            }
+
+            // Constants for macronutrient ratios
+            const proteinRatio = 0.3; // 30% of calories
+            const fatRatio = 0.3; // 30% of calories
+            const carbRatio = 0.4; // 40% of calories
+
+            // Calculate grams of each macronutrient
+            const proteinCalories = calories * proteinRatio;
+            const fatCalories = calories * fatRatio;
+            const carbCalories = calories * carbRatio;
+
+            const proteinGrams = proteinCalories / 4;
+            const fatGrams = fatCalories / 9;
+            const carbGrams = carbCalories / 4;
+
+            // Recommended foods
+            const foods = [
+                { name: 'Broccoli', protein: 2.8, fat: 0.4, carbs: 6.6 }, // per 100g
+                { name: 'Rice', protein: 2.7, fat: 0.3, carbs: 28.7 }, // per 100g
+                { name: 'Chicken Breast', protein: 31, fat: 3.6, carbs: 0 }, // per 100g
+                { name: 'Steak', protein: 26, fat: 21, carbs: 0 }, // per 100g
+                { name: 'Salmon', protein: 25, fat: 14, carbs: 0 }, // per 100g
+                { name: 'Quinoa', protein: 4.1, fat: 1.9, carbs: 21.3 }, // per 100g
+                { name: 'Eggs', protein: 13, fat: 11, carbs: 1.1 } // per 100g
+            ];
+
+            // Update the results section
+            const resultsDiv = document.getElementById('nutritionResults');
+            resultsDiv.innerHTML = `
+                <p><strong>Recommended Protein Intake:</strong> ${proteinGrams.toFixed(2)} grams</p>
+                <p><strong>Recommended Fat Intake:</strong> ${fatGrams.toFixed(2)} grams</p>
+                <p><strong>Recommended Carbohydrate Intake:</strong> ${carbGrams.toFixed(2)} grams</p>
+            `;
+
+            // Update the food recommendations
+            const foodList = document.getElementById('foodRecommendations');
+            foodList.innerHTML = '';
+
+            foods.forEach(food => {
+                const { name, protein, fat, carbs } = food;
+                const foodItem = document.createElement('li');
+                foodItem.textContent = `${name}: 
+                    ${carbs === 0 ? '0' : (carbGrams / (carbs / 100)).toFixed(2)} grams of carbs, 
+                    ${protein === 0 ? '0' : (proteinGrams / (protein / 100)).toFixed(2)} grams of protein, 
+                    ${fat === 0 ? '0' : (fatGrams / (fat / 100)).toFixed(2)} grams of fat per 100g`;
+                foodList.appendChild(foodItem);
+            });
+        }
+    </script>
+</body>
+</html>
